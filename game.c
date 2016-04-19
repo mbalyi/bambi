@@ -2,6 +2,23 @@
 #include "dpy_trm_s01.h"			// DPY API
 #include "game.h"
 
+// uint16_t (pergesmentesites ciklus hossza)
+#ifndef Bounce
+#define Bounce 0x007F	//számláló elszámolási ciklusa
+#endif
+
+// Interrupt 200MS-re valtasa
+#ifndef INT_200MS_COUNT	//idő osztva interruptidő
+#define INT_200MS_COUNT 4	//50ms-enként váltás és jelfigyelés
+#endif
+
+// Interrupt 2 sec-re valtasa (10*INT_200MS_COUNT)
+#ifndef INT_2S_COUNT
+#define INT_2S_COUNT 40
+#endif
+
+// Szamlalo pergesmentesiteshez
+uint16_t debounce[3] = {Bounce, Bounce, Bounce};
 
 int tip=0;			//a kezdeti tippünk definiálása 
 int cnt1=0;
@@ -71,8 +88,14 @@ void compare(int calc, int random){
 
 void start(){
 	buttons();
+	
+	unsigned char previous_state;
+	
 	/* ha a jobb oldali gombot nyomjuk akkor növeljük az értéket */
 	if((!button1){
+		
+		//previous_state=debounce[0];
+		
 		if(cnt1 > 20)
 			tip+=15;
 		else if(cnt1 > 10)
@@ -92,6 +115,9 @@ void start(){
 
 	/* ha a bal oldali gombot nyomjuk akkor csökkentjük az értéket */
 	if((!button3){
+		
+		//previous_state=debounce[2];
+		
 		if(cnt3 > 20)
 			tip-=15;
 		else if(cnt3 > 10)
